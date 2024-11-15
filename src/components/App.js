@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Col, Container, Row } from "react-bootstrap";
-
 import { Route, Switch } from "react-router-dom";
-
 import { data } from "../Data/users";
 import { updateContacts } from "../actions/contact";
-
 import "./stylesheets/App.css";
 import "./stylesheets/leftSidebar.css";
 import SearchBar from "./LeftSidebar/SearchBar";
@@ -29,8 +26,11 @@ function App() {
   useEffect(() => {
     // dispatch action to store contacts in state
     dispatch(updateContacts(data.profile.contacts));
+  }, [dispatch]);
+
+  useEffect(() => {
     setContacts(stateContacts.contacts);
-  }, [dispatch, stateContacts.contacts]);
+  }, [stateContacts]);
   //handle search change
   const onSearchChange = (event) => {
     setSearchField(event.target.value);
@@ -49,7 +49,6 @@ function App() {
             <Row className="left-sidebar-header">
               <Row className="d-flex align-items-center">
                 <Col>
-                  {" "}
                   <ProfileHeader user={user} />
                 </Col>
                 <Col>

@@ -1,62 +1,45 @@
-import React, { useEffect, useRef, useState } from "react";
-
-import LeftChatBubble from "./LeftChatBubble";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
+import LeftChatBubble from "./LeftChatBubble";
 import RightChatBubble from "./RightChatBubble";
 import MessageInput from "./MessageInput";
 import { addNewMessage } from "../../actions/contact";
 import ProfileHeader from "../LeftSidebar/ProfileHeader";
+
 function MessageBox(props) {
   const [chat, setChat] = useState([]);
   const [length, setLength] = useState();
   const dispatch = useDispatch();
-  const bottomRef = useRef(null);
+  const bottomRef = useRef(null); // Create a ref to the bottom of the chat list
+
   useEffect(() => {
     setChat(props.user.chatlog);
     setLength(props.user.chatlog.length);
   }, [props]);
+
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behaviour: "smooth" });
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" }); // Scroll into view when chat updates
   }, [chat]);
-  var time;
-  var hours;
-  var minutes;
-  function currentTime() {
-    var currentDate = new Date();
-    hours = currentDate.getHours();
-    hours = hours % 12 || 12;
-    hours = appendZero(hours);
 
-    // hours = appendZero(currentDate.getHours());
-    minutes = appendZero(currentDate.getMinutes());
-    var seconds = appendZero(currentDate.getSeconds());
-    const am = "AM";
-    const pm = "PM";
-    const timeZone = hours <= 12 ? am : pm;
+  const updateMessages = (message) => {
+    const currentDate = new Date();
+    const hours = currentDate.getHours();
+    const minutes = currentDate.getMinutes();
+    const seconds = currentDate.getSeconds();
+    const ampm = hours >= 12 ? "PM" : "AM";
+    const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+    const timestamp = `${formattedHours}:${minutes
+      .toString()
+      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")} ${ampm}`;
 
-    time = `${hours}:${minutes}:${seconds} ${timeZone}`;
-  }
-
-  function appendZero(time) {
-    if (time < 10 && time.length !== 2) {
-      return "0" + time;
-    }
-    return time;
-  }
-
-  setInterval(currentTime, 1000);
-
-  let updateMesssages = (message) => {
-    let object = {
+    const object = {
       text: message,
-      timestamp: time,
+      timestamp: timestamp,
       sender: "me",
       message_id: length + 1,
     };
     dispatch(addNewMessage(object, props.user.id));
-    // updatelength
     setLength(object.message_id);
-
     setChat([...chat, object]);
   };
 
@@ -88,10 +71,10 @@ function MessageBox(props) {
                 />
               )
             )}
+            <div ref={bottomRef} /> {/* Ref to scroll into view */}
           </div>
         )}
-        <div ref={bottomRef}></div>
-        <MessageInput newMessageHandler={updateMesssages} user={props.user} />
+        <MessageInput newMessageHandler={updateMessages} user={props.user} />
       </div>
     </>
   );
