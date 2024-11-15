@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import LeftChatBubble from "./LeftChatBubble";
 import { useDispatch } from "react-redux";
@@ -10,43 +10,41 @@ function MessageBox(props) {
   const [chat, setChat] = useState([]);
   const [length, setLength] = useState();
   const dispatch = useDispatch();
+  const bottomRef = useRef(null);
   useEffect(() => {
-
-
     setChat(props.user.chatlog);
     setLength(props.user.chatlog.length);
   }, [props]);
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behaviour: "smooth" });
+  }, [chat]);
   var time;
   var hours;
   var minutes;
   function currentTime() {
-  var currentDate = new Date();
-  hours = currentDate.getHours();
-  hours = hours % 12 || 12;
-  hours = appendZero(hours);
+    var currentDate = new Date();
+    hours = currentDate.getHours();
+    hours = hours % 12 || 12;
+    hours = appendZero(hours);
 
-  // hours = appendZero(currentDate.getHours());
-  minutes = appendZero(currentDate.getMinutes());
-  var seconds = appendZero(currentDate.getSeconds());
-  const am = "AM";
-  const pm = "PM";
-   const timeZone = hours <= 12 ? am : pm;
+    // hours = appendZero(currentDate.getHours());
+    minutes = appendZero(currentDate.getMinutes());
+    var seconds = appendZero(currentDate.getSeconds());
+    const am = "AM";
+    const pm = "PM";
+    const timeZone = hours <= 12 ? am : pm;
 
-  time = `${hours}:${minutes}:${seconds} ${timeZone}`;
-
+    time = `${hours}:${minutes}:${seconds} ${timeZone}`;
   }
 
   function appendZero(time) {
-  if (time < 10 && time.length !== 2) {
-    return "0" + time;
+    if (time < 10 && time.length !== 2) {
+      return "0" + time;
+    }
+    return time;
   }
-  return time;
-}
 
-
-setInterval(currentTime, 1000);
-
-
+  setInterval(currentTime, 1000);
 
   let updateMesssages = (message) => {
     let object = {
@@ -92,7 +90,7 @@ setInterval(currentTime, 1000);
             )}
           </div>
         )}
-
+        <div ref={bottomRef}></div>
         <MessageInput newMessageHandler={updateMesssages} user={props.user} />
       </div>
     </>
