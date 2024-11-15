@@ -1,6 +1,6 @@
 # React Chat App
 
-Hosted Website Link : - https://react-chat-app-murex-delta.vercel.app/#/
+Hosted Website Link : - [https://react-chat-app-murex-delta.vercel.app/#/](https://react-chat-app-ashen.vercel.app/#/)
 
 This is a frontend implementation of a chat application built using React, where users can engage in conversations with their contacts. The application allows users to search for conversations by contact name, view and send messages, and manage conversations.
 
