@@ -18,7 +18,12 @@ function MessageInput(props) {
       alert("Type some message text before submitting");
     }
     setMessage("");
-    // scroll to the bottom
+  };
+  // handleSubmit function is invoked when the "Enter" key is pressed.
+  let handleKeyDown = (e) => {
+    if (e.key === "Enter" && message) {
+      handleSubmit();
+    }
   };
   return (
     <>
@@ -29,6 +34,7 @@ function MessageInput(props) {
             placeholder="Send message"
             value={message}
             onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
           />
         </Col>
         <Col xs={3} lg={6}>
